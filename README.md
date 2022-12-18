@@ -10,3 +10,7 @@ In order to ensure the data balance, we randomly one noise for each original dat
 We have saved the pre-trained model in Recogniser.pt with the device cuda.
 
 We have saved the results of test in out_test.txt and the results of test_noisy in out_test_noisy.txt.
+
+LibriSpeech-SI is used for the dataset.
+
+The pre-processed data is saved in data/noise and data/origin by default, and these two folders need to be created in advance.
