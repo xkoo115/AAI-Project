@@ -41,24 +41,26 @@ def test():
     test_set = AudioFlac(test_path)
     noisy_set = AudioFlac(noisy_path)
 
-    test = do_fft(test_set)
-    noisy = do_fft(noisy_set)
+    test, test_name = do_fft(test_set)
+    noisy, noisy_name = do_fft(noisy_set)
 
     model = torch.load("Recogniser.pt")
 
     out_test = predict(test, model.cpu())
     out_test_noisy = predict(noisy, model.cpu())
 
-    np.savetxt("result_test.txt", out_test, fmt='>.3d')
-    np.savetxt("result_test_noisy.txt", out_test_noisy, fmt='>.3d')
+    np.savetxt("result_test.txt", np.vstack((np.expand_dims(np.array(test_name), axis=0), np.expand_dims(out_test, axis=0))).T, fmt="%15s, %6s")
+    np.savetxt("result_test_noisy.txt", np.vstack((np.expand_dims(np.array(noisy_name), axis=0), np.expand_dims(out_test_noisy, axis=0))).T, fmt="%15s, %6s")
 
 def do_fft(x):
     out = []
-    for i in x:
+    file_name = []
+    for i, name in x:
         temp = torch.fft.fft(i, 400000).real
         temp = temp[:,:200000]
         out.append(temp)
-    return out
+        file_name.append(name)
+    return out, file_name
 
 def predict(x, model):
     out = []
@@ -66,7 +68,7 @@ def predict(x, model):
         temp = i.unsqueeze(dim=0)
         label = model(temp)
         _, pred = torch.max(label.data, dim=2)
-        out.append(pred.item()+1)
+        out.append(f"spk{pred.item()+1:3d}")
     return np.array(out)
 
 if __name__ == '__main__':
