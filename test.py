@@ -68,7 +68,7 @@ def predict(x, model):
         temp = i.unsqueeze(dim=0)
         label = model(temp)
         _, pred = torch.max(label.data, dim=2)
-        out.append(f"spk{pred.item()+1:3d}")
+        out.append(f"spk{pred.item()+1:0>3d}")
     return np.array(out)
 
 if __name__ == '__main__':
