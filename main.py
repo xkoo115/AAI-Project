@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import numpy as np
 from model import Recogniser
 from torch.utils.data import random_split, DataLoader
 from dataloader import AudioFlac, ReadData
@@ -26,6 +27,7 @@ def train():
     epoch = 20
 
     print("Start training...")
+    loss_list = []
 
     for _ in range(epoch):
         print(f"Epoch{_+1:>4d}:")
@@ -50,11 +52,13 @@ def train():
             loss = criterion(out, label)
             loss.backward()
             optimizer.step()
+            loss_list.append(loss.item())
             pbar.set_description(f"Loss:{loss.item():.4f}")
 
     # Saving Model
     print("Saving model...")
     torch.save(recogniser, "Recogniser.pt")
+    np.savetxt("loss.txt", np.array(loss_list))
 
     # Verifying Loop
     print("Start verifying")

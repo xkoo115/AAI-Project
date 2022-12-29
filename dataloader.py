@@ -13,8 +13,9 @@ class AudioFlac(data.Dataset):
 
     def __getitem__(self, idx):
         flac_path = self.flac_path[idx]
+        file_name = flac_path.split('/')[-1]
         flac, rate = torchaudio.load(flac_path)
-        return flac
+        return flac, file_name
 
     def __len__(self):
         return len(self.flac_path)
