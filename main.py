@@ -9,7 +9,7 @@ from tqdm import tqdm
 
 def train():
     # Load Dataset
-    train_size = 20000
+    train_size = 40000
     batch_size = 40
     dataset = ReadData()
     train_data, ver_data = random_split(dataset=dataset, lengths=[train_size, len(dataset)-train_size])
